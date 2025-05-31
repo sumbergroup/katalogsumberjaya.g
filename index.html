@@ -7897,6 +7897,20 @@
         "Semua", "Barang Baru", "Animal", "Baby", "Collection", "Educational", "Girls", "Lain-Lain", "Musical", "Outdoor", "Remote Control", "Ride", "Robot", "Small Toys", "Sports", "Transportation BO", "Transportation Non BO", "Weapon & Tool", "Snack Konsumen"
     ];
 
+    function formatRupiah(angka) {
+        const numberString = angka.toString();
+        const split = numberString.split(',');
+        const sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            const separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        return rupiah;
+    }
+
     // Elemen
     const categoryButtonsDiv = document.getElementById('category-buttons');
     const productsDiv = document.getElementById('products');
@@ -7945,6 +7959,7 @@
             productsDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#555; font-weight:600;">Tidak ada produk ditemukan</p>';
             return;
         }
+
         filtered.forEach(p => {
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -7952,7 +7967,7 @@
                 <div><strong></strong> ${p.kode}</div>
                 <img src="${p.gambar}" alt="${p.nama}" class="product-image" loading="lazy" />
                 <div class="product-info">
-                    <div><strong></strong>Rp ${p.harga.toLocaleString('id-ID')}</div>
+                    <div>Rp ${formatRupiah(p.harga)}</div>
                 </div>
                 <table style="width:100%" border="0">
                     <tr>
@@ -7961,7 +7976,7 @@
                     </tr>
                 </table>
                 <div class="product-info">
-                    <div><font size="2"><strong></strong> ${p.nama}</font></div>
+                    <div><font size="2">${p.nama}</font></div>
                 </div>
             `;
             productsDiv.appendChild(card);
